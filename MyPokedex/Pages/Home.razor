@@ -1,7 +1,32 @@
 ﻿@page "/"
+@using MyPokedex.Data
+@using MudBlazor
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+
+
+<MudButton @onclick="GetApi">Get Api</MudButton>
+
+
+
+@code{
+    Pokedex pokedex = new Pokedex();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await pokedex.GetPokemon();
+
+        await base.OnInitializedAsync();
+    }
+
+    public void GetApi()
+    {
+        Console.WriteLine(pokedex.Pokemons);
+    }
+
+}
