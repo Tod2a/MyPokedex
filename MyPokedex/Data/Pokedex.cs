@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using static System.Net.WebRequestMethods;
 
 namespace MyPokedex.Data
 {
@@ -30,26 +31,16 @@ namespace MyPokedex.Data
             string url = "https://pokeapi.co/api/v2/pokemon/" + name + "/";
             JsonElement root = await Datas.GetRoot(url);
             JsonElement order = root.GetProperty("order");
+            pokemon.Order = JsonSerializer.Deserialize<int>(order);
+            GetSprites(pokemon);
             SelectedPokemon = pokemon;
-            Console.WriteLine(order);
+            Console.WriteLine(SelectedPokemon.Order);
         }
 
-        public async Task GetBulbazaur()
+        private void GetSprites(Pokemon pokemon)
         {
-            JsonElement root = await Datas.GetRoot("https://pokeapi.co/api/v2/pokemon/bulbasaur/");
-            Console.WriteLine(root);
-        }
-
-        public async Task GetBulbaImg()
-        {
-            JsonElement root = await Datas.GetRoot("https://pokeapi.co/api/v2/pokemon-form/1/");
-            Console.WriteLine(root);
-        }
-
-        public async Task GetPoke()
-        {
-            JsonElement root = await Datas.GetRoot("https://pokeapi.co/api/v2/pokemon/10270/");
-            Console.WriteLine(root);
+            pokemon.Sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon.Order + ".png";
+            pokemon.ShinySprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/" + pokemon.Order + ".png";
         }
     }
 }

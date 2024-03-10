@@ -20,10 +20,18 @@
         <div class="d-flex align-items-center justify-content-center">
             <MudText Typo="Typo.h4" Color="Color.Success">@pokedex.SelectedPokemon.Name</MudText>
         </div>
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+                
+                <MudImage Src=@pokedex.SelectedPokemon.Sprite Alt="Sprite" />
+            </div>
+            <div>
+                <MudImage Src=@pokedex.SelectedPokemon.ShinySprite Alt="Shiny Sprite" />
+            </div>
+        </div>
     </MudCard>
 }
 
-<MudImage Src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png" Alt="Bulbazaur"/>
 
 @code{
     private Pokedex pokedex = new Pokedex();
