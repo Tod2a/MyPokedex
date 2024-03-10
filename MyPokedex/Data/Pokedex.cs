@@ -37,6 +37,7 @@ namespace MyPokedex.Data
             SelectedPokemon = pokemon;
             GetType(root);
             GetHeightWeight(root);
+            GetStats(root);
         }
 
         private void GetType (JsonElement root)
@@ -58,6 +59,28 @@ namespace MyPokedex.Data
 
             SelectedPokemon.Height = height.GetDouble()/10;
             SelectedPokemon.Weight = weight.GetDouble()/10; 
+        }
+
+        private void GetStats(JsonElement root)
+        {
+            JsonElement statsElement = root.GetProperty("stats");
+            Console.WriteLine(statsElement.ToString());
+
+            List<StatsInfo> statsList = new List<StatsInfo>();
+
+            foreach (var statElement in statsElement.EnumerateArray())
+            {
+                StatsInfo stat = new StatsInfo
+                {
+                    Name = statElement.GetProperty("stat").GetProperty("name").GetString(),
+                    BaseStat = statElement.GetProperty("base_stat").GetInt32()
+                };
+
+                statsList.Add(stat);
+            }
+
+            SelectedPokemon.Stats = statsList;
+
         }
 
         private void GetSprites(Pokemon pokemon)

@@ -9,5 +9,6 @@
         public string Type { get; set; }
         public double Height { get; set; }
         public double Weight { get; set; }
+        public List<StatsInfo> Stats { get; set; }
     }
 }

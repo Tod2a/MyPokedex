@@ -34,6 +34,15 @@
         <MudText>Type: @pokedex.SelectedPokemon.Type</MudText>
         <MudText>Heigth: @pokedex.SelectedPokemon.Height m </MudText>
         <MudText>Weigth: @pokedex.SelectedPokemon.Weight kg</MudText>
+        <MudText Typo="Typo.h6">Stats:</MudText>
+        <ul>
+            @foreach (var stat in pokedex.SelectedPokemon.Stats)
+            {
+                <li>
+                    <MudText>@stat.Name : @stat.BaseStat</MudText>
+                </li>
+            }
+        </ul>
         <MudCardActions><MudButton @onclick="AddFav">Add to favorites</MudButton></MudCardActions>
     </MudCard>
 }
@@ -65,6 +74,15 @@
                 <MudText>Type: @poke.Type</MudText>
                 <MudText>Heigth: @poke.Height m </MudText>
                 <MudText>Weigth: @poke.Weight kg</MudText>
+                <MudText Typo="Typo.h6">Stats:</MudText>
+                <ul>
+                    @foreach (var stat in poke.Stats)
+                    {
+                        <li>
+                            <MudText>@stat.Name : @stat.BaseStat</MudText>
+                            </li>
+                    }
+                </ul>
                 <MudCardActions><MudButton @onclick="() => RemoveFav(poke.Name)">Remove from favorites</MudButton></MudCardActions>
             </MudCard>
         }
