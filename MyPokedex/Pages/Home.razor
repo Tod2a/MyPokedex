@@ -31,6 +31,9 @@
                 <MudImage Src=@pokedex.SelectedPokemon.ShinySprite Alt="Shiny Sprite" />
             </div>
         </div>
+        <MudText>Type: @pokedex.SelectedPokemon.Type</MudText>
+        <MudText>Heigth: @pokedex.SelectedPokemon.Height m </MudText>
+        <MudText>Weigth: @pokedex.SelectedPokemon.Weight kg</MudText>
         <MudCardActions><MudButton @onclick="AddFav">Add to favorites</MudButton></MudCardActions>
     </MudCard>
 }
@@ -59,7 +62,10 @@
                         <MudImage Src=@poke.ShinySprite Alt="Shiny Sprite" />
                     </div>
                 </div>
-                <MudCardActions><MudButton @onclick="() => RemoveFav(poke.Name)">Add to favorites</MudButton></MudCardActions>
+                <MudText>Type: @poke.Type</MudText>
+                <MudText>Heigth: @poke.Height m </MudText>
+                <MudText>Weigth: @poke.Weight kg</MudText>
+                <MudCardActions><MudButton @onclick="() => RemoveFav(poke.Name)">Remove from favorites</MudButton></MudCardActions>
             </MudCard>
         }
     }

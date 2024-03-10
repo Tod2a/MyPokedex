@@ -35,6 +35,29 @@ namespace MyPokedex.Data
             pokemon.Id = JsonSerializer.Deserialize<int>(id);
             GetSprites(pokemon);
             SelectedPokemon = pokemon;
+            GetType(root);
+            GetHeightWeight(root);
+        }
+
+        private void GetType (JsonElement root)
+        {
+            JsonElement type = root.GetProperty("types");
+            JsonElement[] typeArray = type.EnumerateArray().Select(t => t.GetProperty("type").GetProperty("name")).ToArray();
+
+            //concat the types.
+            string concatenatedTypes = string.Join("/", typeArray.Select(t => t.GetString()));
+
+            //save the types in the pokemon selected
+            SelectedPokemon.Type = concatenatedTypes;
+        }
+
+        private void GetHeightWeight(JsonElement root)
+        {
+            JsonElement height = root.GetProperty("height");
+            JsonElement weight = root.GetProperty("weight");
+
+            SelectedPokemon.Height = height.GetDouble()/10;
+            SelectedPokemon.Weight = weight.GetDouble()/10; 
         }
 
         private void GetSprites(Pokemon pokemon)
