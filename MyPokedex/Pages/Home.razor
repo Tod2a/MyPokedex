@@ -4,18 +4,30 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudAutocomplete T="PokemonBase" Label="Pokemon" @bind-Value="selectedPokemon"
+                         SearchFunc="@SearchPokemon" ToStringFunc="@(p => p?.Name)" />
+    </MudItem>
+    <MudItem xs="12" md="12">
+        <MudButton @onclick="GetSelectedPokemon">Get Pokemon Infos</MudButton>
+    </MudItem>
+</MudGrid>
 
-Welcome to your new app.
+@if (pokedex.SelectedPokemon != null)
+{
+    <MudCard Width="25%">
+        <div class="d-flex align-items-center justify-content-center">
+            <MudText Typo="Typo.h4" Color="Color.Success">@pokedex.SelectedPokemon.Name</MudText>
+        </div>
+    </MudCard>
+}
 
-
-
-<MudButton @onclick="GetApi">Get Api</MudButton>
-
-
+<MudImage Src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png" Alt="Bulbazaur"/>
 
 @code{
-    Pokedex pokedex = new Pokedex();
+    private Pokedex pokedex = new Pokedex();
+    private PokemonBase selectedPokemon;
 
     protected override async Task OnInitializedAsync()
     {
@@ -24,9 +36,22 @@ Welcome to your new app.
         await base.OnInitializedAsync();
     }
 
-    public void GetApi()
+    private async Task<IEnumerable<PokemonBase>> SearchPokemon(string searchText)
     {
-        Console.WriteLine(pokedex.Pokemons);
+
+        // Use your Pokedex service or repository to search for Pokemon by name
+        var pokemonList = await pokedex.SearchByName(searchText);
+        return pokemonList;
     }
+
+    private async Task GetSelectedPokemon()
+    {
+        if (selectedPokemon != null)
+        {
+            await pokedex.GetPokemonInfos(selectedPokemon.Name);
+        }
+    }
+
+    
 
 }

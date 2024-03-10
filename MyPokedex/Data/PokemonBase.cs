@@ -1,8 +1,8 @@
 ﻿namespace MyPokedex.Data
 {
-    public class Pokemon
+    public class PokemonBase
     {
         public string Name { get; set; }
-        public int Order { get; set; }
+        public string Url { get; set; }
     }
 }
