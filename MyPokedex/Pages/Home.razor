@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using MyPokedex.Data
 @using MudBlazor
+@using System.Text.Json
+@inject IJSRuntime JS
 
 <PageTitle>Home</PageTitle>
 
@@ -29,17 +31,51 @@
                 <MudImage Src=@pokedex.SelectedPokemon.ShinySprite Alt="Shiny Sprite" />
             </div>
         </div>
+        <MudCardActions><MudButton @onclick="AddFav">Add to favorites</MudButton></MudCardActions>
     </MudCard>
 }
+
+@if (ListMessage != null)
+{
+    <p>@ListMessage</p>
+}
+
+<h3>Favorites pokemons:</h3>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    @if (pokedex.Favorites.Count() > 0)
+    {
+        @foreach (Pokemon poke in pokedex.Favorites)
+        {
+            <MudCard Width="calc(25% - 10px)">
+                <div class="d-flex align-items-center justify-content-center">
+                    <MudText Typo="Typo.h4" Color="Color.Success">@poke.Name</MudText>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <MudImage Src=@poke.Sprite Alt="Sprite" />
+                    </div>
+                    <div>
+                        <MudImage Src=@poke.ShinySprite Alt="Shiny Sprite" />
+                    </div>
+                </div>
+                <MudCardActions><MudButton @onclick="() => RemoveFav(poke.Name)">Add to favorites</MudButton></MudCardActions>
+            </MudCard>
+        }
+    }
+</div>
 
 
 @code{
     private Pokedex pokedex = new Pokedex();
     private PokemonBase selectedPokemon;
+    private string ListMessage;
 
     protected override async Task OnInitializedAsync()
     {
         await pokedex.GetPokemon();
+
+        await LoadFavs();
 
         await base.OnInitializedAsync();
     }
@@ -54,12 +90,53 @@
 
     private async Task GetSelectedPokemon()
     {
+        ListMessage = null;
         if (selectedPokemon != null)
         {
             await pokedex.GetPokemonInfos(selectedPokemon.Name);
         }
     }
 
-    
+    private async Task AddFav()
+    {
+        if (pokedex.AddFavorite())
+        {
+            var savings = JsonSerializer.Serialize(pokedex.Favorites);
+            await JS.InvokeVoidAsync("localStorage.setItem", "pokemonfavs", savings);
+            ListMessage = "Adedd";
+            selectedPokemon = null;
+            pokedex.SelectedPokemon = null;
+        }
+        else
+        {
+            ListMessage = "Too much favs, delete one"; 
+        }
+    }
 
+    private async Task RemoveFav(string name)
+    {
+        if (pokedex.RemoveFavorite(name))
+        {
+            var savings = JsonSerializer.Serialize(pokedex.Favorites);
+            await JS.InvokeVoidAsync("localStorage.setItem", "pokemonfavs", savings);
+            ListMessage = "removed";
+        }
+        else
+        {
+            ListMessage = "error with remove";
+        }
+    }
+
+    private async Task LoadFavs()
+    {
+        var favs = await JS.InvokeAsync<string>("localStorage.getItem", "pokemonfavs");
+        if (favs != null)
+        {
+            List<Pokemon> savings = JsonSerializer.Deserialize<List<Pokemon>>(favs);
+            foreach (var save in savings)
+            {
+                pokedex.Favorites.Add(save);
+            }
+        }
+    }
 }
