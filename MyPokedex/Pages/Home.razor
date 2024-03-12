@@ -4,7 +4,13 @@
 @using System.Text.Json
 @inject IJSRuntime JS
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Pokedex</PageTitle>
+
+<MudContainer>
+    <MudPaper Elevation="4">
+        <h2 class="pokemon-title">Pokédex</h2>
+    </MudPaper>
+</MudContainer>
 
 <MudGrid>
     <MudItem xs="12" sm="6" md="4">
@@ -31,6 +37,7 @@
                 <MudImage Src=@pokedex.SelectedPokemon.ShinySprite Alt="Shiny Sprite" />
             </div>
         </div>
+        <MudText>Numéro: @pokedex.SelectedPokemon.Id</MudText>
         <MudText>Type: @pokedex.SelectedPokemon.Type</MudText>
         <MudText>Heigth: @pokedex.SelectedPokemon.Height m </MudText>
         <MudText>Weigth: @pokedex.SelectedPokemon.Weight kg</MudText>
@@ -71,6 +78,7 @@
                         <MudImage Src=@poke.ShinySprite Alt="Shiny Sprite" />
                     </div>
                 </div>
+                <MudText>Numéro: @poke.Id</MudText>
                 <MudText>Type: @poke.Type</MudText>
                 <MudText>Heigth: @poke.Height m </MudText>
                 <MudText>Weigth: @poke.Weight kg</MudText>
