@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Xml.Linq;
 using static System.Net.WebRequestMethods;
 
 namespace MyPokedex.Data
@@ -40,6 +42,8 @@ namespace MyPokedex.Data
             GetStats(root);
         }
 
+        //PRIVATE GET INFOS 
+        #region Private functions to get more infos
         private void GetType (JsonElement root)
         {
             JsonElement type = root.GetProperty("types");
@@ -87,10 +91,11 @@ namespace MyPokedex.Data
             pokemon.Sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon.Id + ".png";
             pokemon.ShinySprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/" + pokemon.Id + ".png";
         }
+        #endregion
 
         public bool AddFavorite()
         {
-            if (Favorites.Count < 15) 
+            if (Favorites.Count < 15 && !Favorites.Any(x => x.Name.ToLower().Contains(SelectedPokemon.Name))) 
             { 
                 Favorites.Add(SelectedPokemon); 
                 return true;
