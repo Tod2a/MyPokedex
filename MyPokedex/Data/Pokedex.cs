@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Microsoft.Extensions.Options;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Xml.Linq;
 using static System.Net.WebRequestMethods;
@@ -10,6 +11,8 @@ namespace MyPokedex.Data
         public Pokemon SelectedPokemon { get; set; }
         public List<Pokemon> Favorites { get; set; } = new List<Pokemon>();
         public PokemonBase[] PokemonsList { get; set; }
+        public Pokemon PokemonEncounter { get; set; }
+        public List<RootEncounter> Encounters { get; set; }
         private DataManager Datas { get; set; } = new DataManager();
 
 
@@ -40,6 +43,43 @@ namespace MyPokedex.Data
             GetType(root);
             GetHeightWeight(root);
             GetStats(root);
+        }
+
+        public async Task<bool> GetLocalisation(Pokemon pokemon)
+        {
+            int id = pokemon.Id;
+            string url = "https://pokeapi.co/api/v2/pokemon/" + id + "/encounters";
+            JsonElement root = await Datas.GetRoot(url);
+            var options = Datas.GetOptionCaseInsensitive();
+            var result = JsonSerializer.Deserialize<List<RootEncounter>>(root, options);
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"Location Area: {item.LocationArea.Name}");
+                Console.WriteLine("Version Details:");
+                foreach (var versionDetail in item.VersionDetails)
+                {
+                    Console.WriteLine($"\tVersion: {versionDetail.Version.Name}");
+                    Console.WriteLine($"\tMax Chance: {versionDetail.MaxChance}");
+                    Console.WriteLine("\tEncounter Details:");
+                    foreach (var encounterDetail in versionDetail.EncounterDetails)
+                    {
+                        Console.WriteLine($"\t\tChance: {encounterDetail.Chance}");
+                        Console.WriteLine($"\t\tMax Level: {encounterDetail.MaxLevel}");
+                        Console.WriteLine($"\t\tMin Level: {encounterDetail.MinLevel}");
+                        Console.WriteLine($"\t\tMethod: {encounterDetail.Method.Name}");
+                        Console.WriteLine();
+                    }
+                }
+            }
+
+            if (result != null)
+            {
+                Encounters = result;
+                return true;
+            }
+            return false;
+            
         }
 
         //PRIVATE GET INFOS 
@@ -93,6 +133,8 @@ namespace MyPokedex.Data
         }
         #endregion
 
+        //FAVS MANAGEMENT
+        #region Favs management
         public bool AddFavorite()
         {
             if (Favorites.Count < 15 && !Favorites.Any(x => x.Name.ToLower().Contains(SelectedPokemon.Name))) 
@@ -113,5 +155,6 @@ namespace MyPokedex.Data
             }
             return false;
         }
+        #endregion
     }
 }

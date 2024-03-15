@@ -3,14 +3,14 @@
 @using MudBlazor
 @using System.Text.Json
 @inject IJSRuntime JS
+@inject Pokedex pokedex;
+@inject NavigationManager NavigationManager
 
 <PageTitle>Pokedex</PageTitle>
 
-<MudContainer>
-    <MudPaper Elevation="4">
-        <h2 class="pokemon-title">Pokédex</h2>
-    </MudPaper>
-</MudContainer>
+
+<h2 class="pokemon-title">Pokédex</h2>
+
 
 <MudGrid>
     <MudItem xs="12" sm="6" md="4">
@@ -37,20 +37,23 @@
                 <MudImage Src=@pokedex.SelectedPokemon.ShinySprite Alt="Shiny Sprite" />
             </div>
         </div>
-        <MudText>Numéro: @pokedex.SelectedPokemon.Id</MudText>
-        <MudText>Type: @pokedex.SelectedPokemon.Type</MudText>
-        <MudText>Heigth: @pokedex.SelectedPokemon.Height m </MudText>
-        <MudText>Weigth: @pokedex.SelectedPokemon.Weight kg</MudText>
-        <MudText Typo="Typo.h6">Stats:</MudText>
+        <MudText Class="cardText">Numéro: @pokedex.SelectedPokemon.Id</MudText>
+        <MudText Class="cardText">Type: @pokedex.SelectedPokemon.Type</MudText>
+        <MudText Class="cardText">Heigth: @pokedex.SelectedPokemon.Height m </MudText>
+        <MudText Class="cardText">Weigth: @pokedex.SelectedPokemon.Weight kg</MudText>
+        <MudText Class="cardText" Typo="Typo.h6">Stats:</MudText>
         <ul>
             @foreach (var stat in pokedex.SelectedPokemon.Stats)
             {
                 <li>
-                    <MudText>@stat.Name : @stat.BaseStat</MudText>
+                    <MudText Class="cardText">@stat.Name : @stat.BaseStat</MudText>
                 </li>
             }
         </ul>
-        <MudCardActions><MudButton @onclick="AddFav">Add to favorites</MudButton></MudCardActions>
+        <MudCardActions>
+            <MudButton @onclick="AddFav">Add to favorites</MudButton>
+            <MudButton @onclick="() => GetEncounter(pokedex.SelectedPokemon)">Get encounters</MudButton>
+        </MudCardActions>
     </MudCard>
 }
 
@@ -61,37 +64,40 @@
 
 <h3>Favorites pokemons:</h3>
 
-<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<div class="card-container">
     @if (pokedex.Favorites.Count() > 0)
     {
         @foreach (Pokemon poke in pokedex.Favorites)
         {
-            <MudCard Width="calc(25% - 10px)">
-                <div class="d-flex align-items-center justify-content-center">
+            <MudCard Class="card">
+                <div class="centered">
                     <MudText Typo="Typo.h4" Color="Color.Success">@poke.Name</MudText>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <div>
-                        <MudImage Src=@poke.Sprite Alt="Sprite" />
                     </div>
-                    <div>
-                        <MudImage Src=@poke.ShinySprite Alt="Shiny Sprite" />
+                    <div class="flex-container">
+                        <div>
+                            <MudImage Src=@poke.Sprite Alt="Sprite" />
+                        </div>
+                        <div>
+                            <MudImage Src=@poke.ShinySprite Alt="Shiny Sprite" />
+                        </div>
                     </div>
-                </div>
-                <MudText>Numéro: @poke.Id</MudText>
-                <MudText>Type: @poke.Type</MudText>
-                <MudText>Heigth: @poke.Height m </MudText>
-                <MudText>Weigth: @poke.Weight kg</MudText>
-                <MudText Typo="Typo.h6">Stats:</MudText>
+                    <MudText Class="cardText">Numéro: @poke.Id</MudText>
+                    <MudText Class="cardText">Type: @poke.Type</MudText>
+                    <MudText Class="cardText">Heigth: @poke.Height m </MudText>
+                <MudText Class="cardText">Weigth: @poke.Weight kg</MudText>
+                <MudText Class="cardText" Typo="Typo.h6">Stats:</MudText>
                 <ul>
                     @foreach (var stat in poke.Stats)
                     {
                         <li>
-                            <MudText>@stat.Name : @stat.BaseStat</MudText>
+                            <MudText Class="cardText">@stat.Name : @stat.BaseStat</MudText>
                             </li>
                     }
                 </ul>
-                <MudCardActions><MudButton @onclick="() => RemoveFav(poke.Name)">Remove from favorites</MudButton></MudCardActions>
+                <MudCardActions>
+                    <MudButton @onclick="() => RemoveFav(poke.Name)">Remove from favorites</MudButton>
+                    <MudButton @onclick="() => GetEncounter(poke)">Get encounters</MudButton>
+                </MudCardActions>
             </MudCard>
         }
     }
@@ -99,18 +105,22 @@
 
 
 
+
 @code{
-    private Pokedex pokedex = new Pokedex();
     private PokemonBase selectedPokemon;
     private string ListMessage;
 
-
+    //INITIALIZE
+    #region Initilize
     protected override async Task OnInitializedAsync()
     {
         await GetPokemons();
 
-        await LoadFavs();
-
+        if(pokedex.Favorites.Count() == 0)
+        {
+            await LoadFavs();
+        }
+        
         await base.OnInitializedAsync();
     }
 
@@ -137,7 +147,11 @@
         }
 
     }
-    
+    #endregion
+
+
+    //SEARCH
+    #region Search
     private async Task<IEnumerable<PokemonBase>> SearchPokemon(string searchText)
     {
 
@@ -154,6 +168,8 @@
             await pokedex.GetPokemonInfos(selectedPokemon.Name);
         }
     }
+    #endregion
+
 
     // FAVS
     #region Favs
@@ -199,5 +215,25 @@
             }
         }
     }
+    #endregion
+
+
+    //ENCOUNTERS
+    #region Encounters
+
+    private async Task GetEncounter (Pokemon pokemon)
+    {
+        bool test = await pokedex.GetLocalisation(pokemon);
+        if (test)
+        {
+            pokedex.PokemonEncounter = pokemon;
+            NavigationManager.NavigateTo("/enc");
+        }
+        else
+        {
+            ListMessage = "Problem with loading encounters";
+        }
+    }
+
     #endregion
 }

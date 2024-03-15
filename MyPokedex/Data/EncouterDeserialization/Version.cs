@@ -1,7 +1,6 @@
 ﻿namespace MyPokedex.Data
 {
-    //Used to deserialize
-    public class PokemonBase
+    public class Version
     {
         public string Name { get; set; }
         public string Url { get; set; }

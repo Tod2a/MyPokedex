@@ -1,0 +1,22 @@
+﻿@page "/enc"
+@using MyPokedex.Data
+@using MudBlazor
+@inject NavigationManager NavigationManager
+@inject Pokedex pokedex
+
+<PageTitle>Localisation</PageTitle>
+
+<h3 class="pokemon-title">The places where you can encounter @pokedex.PokemonEncounter.Name</h3>
+
+
+
+<MudButton @onclick="GoBackHome">Home</MudButton>
+
+@code {
+
+
+    private void GoBackHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
