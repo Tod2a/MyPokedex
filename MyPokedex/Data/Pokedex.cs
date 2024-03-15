@@ -53,26 +53,6 @@ namespace MyPokedex.Data
             var options = Datas.GetOptionCaseInsensitive();
             var result = JsonSerializer.Deserialize<List<RootEncounter>>(root, options);
 
-            foreach (var item in result)
-            {
-                Console.WriteLine($"Location Area: {item.LocationArea.Name}");
-                Console.WriteLine("Version Details:");
-                foreach (var versionDetail in item.VersionDetails)
-                {
-                    Console.WriteLine($"\tVersion: {versionDetail.Version.Name}");
-                    Console.WriteLine($"\tMax Chance: {versionDetail.MaxChance}");
-                    Console.WriteLine("\tEncounter Details:");
-                    foreach (var encounterDetail in versionDetail.EncounterDetails)
-                    {
-                        Console.WriteLine($"\t\tChance: {encounterDetail.Chance}");
-                        Console.WriteLine($"\t\tMax Level: {encounterDetail.MaxLevel}");
-                        Console.WriteLine($"\t\tMin Level: {encounterDetail.MinLevel}");
-                        Console.WriteLine($"\t\tMethod: {encounterDetail.Method.Name}");
-                        Console.WriteLine();
-                    }
-                }
-            }
-
             if (result != null)
             {
                 Encounters = result;
