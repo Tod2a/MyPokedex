@@ -98,20 +98,48 @@
 </div>
 
 
+
 @code{
     private Pokedex pokedex = new Pokedex();
     private PokemonBase selectedPokemon;
     private string ListMessage;
 
+
     protected override async Task OnInitializedAsync()
     {
-        await pokedex.GetPokemon();
+        await GetPokemons();
 
         await LoadFavs();
 
         await base.OnInitializedAsync();
     }
 
+    private async Task GetPokemons()
+    {
+        await pokedex.GetPokemon();
+
+        if (pokedex.PokemonsList == null)
+        {
+            var list = await JS.InvokeAsync<string>("localStorage.getItem", "pokelist");
+            if(list != null)
+            {
+                pokedex.PokemonsList = JsonSerializer.Deserialize<PokemonBase[]>(list);
+            }
+            else
+            {
+                ListMessage = "We apologize for the inconvenience. We are currently experiencing technical difficulties with loading the data and our team is working to resolve the issue.";
+            }
+        }
+        else
+        {
+            var listSaving = JsonSerializer.Serialize(pokedex.PokemonsList);
+            await JS.InvokeVoidAsync("localStorage.setItem", "pokelist", listSaving);
+        }
+
+    }
+    
+    //AUTOCOMPLETE
+    #region Autocomplete
     private async Task<IEnumerable<PokemonBase>> SearchPokemon(string searchText)
     {
 
@@ -128,7 +156,10 @@
             await pokedex.GetPokemonInfos(selectedPokemon.Name);
         }
     }
+    #endregion
 
+    // FAVS
+    #region Favs
     private async Task AddFav()
     {
         if (pokedex.AddFavorite())
@@ -171,4 +202,5 @@
             }
         }
     }
+    #endregion
 }

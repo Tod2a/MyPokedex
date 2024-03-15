@@ -64,7 +64,6 @@ namespace MyPokedex.Data
         private void GetStats(JsonElement root)
         {
             JsonElement statsElement = root.GetProperty("stats");
-            Console.WriteLine(statsElement.ToString());
 
             List<StatsInfo> statsList = new List<StatsInfo>();
 
