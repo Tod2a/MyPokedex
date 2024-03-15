@@ -20,5 +20,17 @@ namespace TestMyPokedex
             //Assert
             Assert.Equal(expected, myResult);
         }
+
+        [Fact]
+        public async Task TestSearchbyName()
+        {
+            //Arrange
+            var pokedex = new Pokedex();
+            //Act
+            await pokedex.GetPokemon();
+            var myResult = pokedex.SearchByName("bulba").Result.FirstOrDefault().Name;
+            //Assert
+            Assert.Equal("bulbasaur", myResult);
+        }
     }
 }
