@@ -18,7 +18,7 @@
                          SearchFunc="@SearchPokemon" ToStringFunc="@(p => p?.Name)" />
     </MudItem>
     <MudItem xs="12" md="12">
-        <MudButton @onclick="GetSelectedPokemon">Get Pokemon Infos</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="GetSelectedPokemon">Get Pokemon Infos</MudButton>
     </MudItem>
 </MudGrid>
 
@@ -51,8 +51,8 @@
             }
         </ul>
         <MudCardActions>
-            <MudButton @onclick="AddFav">Add to favorites</MudButton>
-            <MudButton @onclick="() => GetEncounter(pokedex.SelectedPokemon)">Get encounters</MudButton>
+            <MudButton Color="Color.Primary" @onclick="AddFav">Add to favorites</MudButton>
+            <MudButton Color="Color.Primary" @onclick="() => GetEncounter(pokedex.SelectedPokemon)">Get encounters</MudButton>
         </MudCardActions>
     </MudCard>
 }
@@ -95,8 +95,8 @@
                     }
                 </ul>
                 <MudCardActions>
-                    <MudButton @onclick="() => RemoveFav(poke.Name)">Remove from favorites</MudButton>
-                    <MudButton @onclick="() => GetEncounter(poke)">Get encounters</MudButton>
+                    <MudButton Color="Color.Primary" @onclick="() => RemoveFav(poke.Name)">Remove from favorites</MudButton>
+                    <MudButton Color="Color.Primary" @onclick="() => GetEncounter(poke)">Get encounters</MudButton>
                 </MudCardActions>
             </MudCard>
         }

@@ -8,9 +8,38 @@
 
 <h3 class="pokemon-title">The places where you can encounter @pokedex.PokemonEncounter.Name</h3>
 
+<div>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="GoBackHome">Home</MudButton>
+</div>
+
+<div class="card-container">
+    @foreach (var root in pokedex.Encounters)
+    {
+        <MudCard Class="card">
+            <div class="centered">
+                <MudText Typo="Typo.h4" Color="Color.Success">@root.LocationArea.Name</MudText>
+            </div>
+            @foreach(var detail in root.VersionDetails)
+            {
+                <MudText Class="cardText" Typo="Typo.h5">@detail.Version.Name :</MudText>
+                @foreach(var encounter in detail.EncounterDetails)
+                {
+                    <MudText Class="cardText">Method: @encounter.Method.Name</MudText>
+                    <MudText Class="cardText">Min Level: @encounter.MinLevel</MudText>
+                    <MudText Class="cardText">Max Level: @encounter.MaxLevel</MudText>
+                    <MudText Class="cardText">Chance: @encounter.Chance %</MudText>
+                    @foreach(var cond in encounter.ConditionValues)
+                    {
+                        <MudText Class="cardText">Condition: @cond.Name</MudText>
+                    }
+                }
+            }
+        </MudCard>
+    }
+</div>
 
 
-<MudButton @onclick="GoBackHome">Home</MudButton>
+
 
 @code {
 
