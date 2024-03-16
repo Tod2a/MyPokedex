@@ -14,7 +14,7 @@
 
 <MudGrid>
     <MudItem xs="12" sm="6" md="4">
-        <MudAutocomplete T="PokemonBase" Label="Pokemon" @bind-Value="selectedPokemon"
+        <MudAutocomplete Style="@($"background:{Theme.Palette.Warning};")" T="PokemonBase" Variant="Variant.Outlined" Label="Pokemon" @bind-Value="selectedPokemon"
                          SearchFunc="@SearchPokemon" ToStringFunc="@(p => p?.Name)" />
     </MudItem>
     <MudItem xs="12" md="12">
@@ -37,7 +37,8 @@
                 <MudImage Src=@pokedex.SelectedPokemon.ShinySprite Alt="Shiny Sprite" />
             </div>
         </div>
-        <MudText Class="cardText">Numéro: @pokedex.SelectedPokemon.Id</MudText>
+        <MudText Class="cardText">Number: @pokedex.SelectedPokemon.Id</MudText>
+        <MudText Class="cardText">Level: @pokedex.SelectedPokemon.Level</MudText>
         <MudText Class="cardText">Type: @pokedex.SelectedPokemon.Type</MudText>
         <MudText Class="cardText">Heigth: @pokedex.SelectedPokemon.Height m </MudText>
         <MudText Class="cardText">Weigth: @pokedex.SelectedPokemon.Weight kg</MudText>
@@ -81,7 +82,8 @@
                             <MudImage Src=@poke.ShinySprite Alt="Shiny Sprite" />
                         </div>
                     </div>
-                    <MudText Class="cardText">Numéro: @poke.Id</MudText>
+                    <MudText Class="cardText">Number: @poke.Id</MudText>
+                    <MudText Class="cardText">Level: @poke.Level</MudText>
                     <MudText Class="cardText">Type: @poke.Type</MudText>
                     <MudText Class="cardText">Heigth: @poke.Height m </MudText>
                 <MudText Class="cardText">Weigth: @poke.Weight kg</MudText>
@@ -97,6 +99,7 @@
                 <MudCardActions>
                     <MudButton Color="Color.Primary" @onclick="() => RemoveFav(poke.Name)">Remove from favorites</MudButton>
                     <MudButton Color="Color.Primary" @onclick="() => GetEncounter(poke)">Get encounters</MudButton>
+                    <MudButton Color="Color.Primary" @onclick="() => LevelUp(poke)">Level Up</MudButton>
                 </MudCardActions>
             </MudCard>
         }
@@ -109,6 +112,7 @@
 @code{
     private PokemonBase selectedPokemon;
     private string ListMessage;
+    private MudTheme Theme = new MudTheme();
 
     //INITIALIZE
     #region Initilize
@@ -120,7 +124,7 @@
         {
             await LoadFavs();
         }
-        
+
         await base.OnInitializedAsync();
     }
 
@@ -173,6 +177,13 @@
 
     // FAVS
     #region Favs
+    private async Task LevelUp(Pokemon poke)
+    {
+        poke.LevelUp();
+        var savings = JsonSerializer.Serialize(pokedex.Favorites);
+        await JS.InvokeVoidAsync("localStorage.setItem", "pokemonfavs", savings);
+    }
+
     private async Task AddFav()
     {
         if (pokedex.AddFavorite())

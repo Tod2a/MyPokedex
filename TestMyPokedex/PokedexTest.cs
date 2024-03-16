@@ -1,7 +1,4 @@
-using Xunit;
-using MyPokedex;
 using MyPokedex.Data;
-using static System.Net.WebRequestMethods;
 namespace TestMyPokedex
 {
     public class PokedexTest
@@ -32,7 +29,7 @@ namespace TestMyPokedex
             await pokedex.GetPokemon();
             string myResult;
             var tempResult = pokedex.SearchByName(test).Result.FirstOrDefault();
-            if(tempResult != null)
+            if (tempResult != null)
             {
                 myResult = tempResult.Name;
             }
@@ -115,7 +112,7 @@ namespace TestMyPokedex
                 "kakuna",
                 "beedrill"
             };
-            foreach(string item in list)
+            foreach (string item in list)
             {
                 await pokedex.GetPokemonInfos(item);
                 pokedex.AddFavorite();
