@@ -18,7 +18,7 @@
                          SearchFunc="@SearchPokemon" ToStringFunc="@(p => p?.Name)" />
     </MudItem>
     <MudItem xs="12" md="12">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="GetSelectedPokemon">Get Pokemon Infos</MudButton>
+        <MudButton id="GetButton" Variant="Variant.Filled" Color="Color.Primary" @onclick="GetSelectedPokemon">Get Pokemon Infos</MudButton>
     </MudItem>
 </MudGrid>
 
@@ -26,7 +26,7 @@
 {
     <MudCard Width="25%">
         <div class="d-flex align-items-center justify-content-center">
-            <MudText Typo="Typo.h4" Color="Color.Success">@pokedex.SelectedPokemon.Name</MudText>
+            <MudText id="selectedName" Typo="Typo.h4" Color="Color.Success">@pokedex.SelectedPokemon.Name</MudText>
         </div>
         <div style="display: flex; justify-content: space-between;">
             <div>
@@ -37,7 +37,7 @@
                 <MudImage Src=@pokedex.SelectedPokemon.ShinySprite Alt="Shiny Sprite" />
             </div>
         </div>
-        <MudText Class="cardText">Number: @pokedex.SelectedPokemon.Id</MudText>
+        <MudText id="selectedId" Class="cardText">Number: @pokedex.SelectedPokemon.Id</MudText>
         <MudText Class="cardText">Level: @pokedex.SelectedPokemon.Level</MudText>
         <MudText Class="cardText">Type: @pokedex.SelectedPokemon.Type</MudText>
         <MudText Class="cardText">Heigth: @pokedex.SelectedPokemon.Height m </MudText>
@@ -110,7 +110,7 @@
 
 
 @code{
-    private PokemonBase selectedPokemon;
+    public PokemonBase selectedPokemon;
     private string ListMessage;
     private MudTheme Theme = new MudTheme();
 
