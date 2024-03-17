@@ -14,11 +14,11 @@
 
 <MudGrid>
     <MudItem xs="12" sm="6" md="4">
-        <MudAutocomplete Style="@($"background:{Theme.Palette.Warning};")" T="PokemonBase" Variant="Variant.Outlined" Label="Pokemon" @bind-Value="selectedPokemon"
+        <MudAutocomplete Style="@($"background:{Theme.Palette.Warning};")" T="PokemonBase" Variant="Variant.Outlined" Label="Pokemon" @bind-Value="selectedSearch"
                          SearchFunc="@SearchPokemon" ToStringFunc="@(p => p?.Name)" />
     </MudItem>
     <MudItem xs="12" md="12">
-        <MudButton id="GetButton" Variant="Variant.Filled" Color="Color.Primary" @onclick="GetSelectedPokemon">Get Pokemon Infos</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="GetSelectedPokemon">Get Pokemon Infos</MudButton>
     </MudItem>
 </MudGrid>
 
@@ -26,7 +26,7 @@
 {
     <MudCard Width="25%">
         <div class="d-flex align-items-center justify-content-center">
-            <MudText id="selectedName" Typo="Typo.h4" Color="Color.Success">@pokedex.SelectedPokemon.Name</MudText>
+            <MudText Typo="Typo.h4" Color="Color.Success">@pokedex.SelectedPokemon.Name</MudText>
         </div>
         <div style="display: flex; justify-content: space-between;">
             <div>
@@ -37,7 +37,7 @@
                 <MudImage Src=@pokedex.SelectedPokemon.ShinySprite Alt="Shiny Sprite" />
             </div>
         </div>
-        <MudText id="selectedId" Class="cardText">Number: @pokedex.SelectedPokemon.Id</MudText>
+        <MudText Class="cardText">Number: @pokedex.SelectedPokemon.Id</MudText>
         <MudText Class="cardText">Level: @pokedex.SelectedPokemon.Level</MudText>
         <MudText Class="cardText">Type: @pokedex.SelectedPokemon.Type</MudText>
         <MudText Class="cardText">Heigth: @pokedex.SelectedPokemon.Height m </MudText>
@@ -110,7 +110,7 @@
 
 
 @code{
-    public PokemonBase selectedPokemon;
+    public PokemonBase selectedSearch;
     private string ListMessage;
     private MudTheme Theme = new MudTheme();
 
@@ -167,9 +167,9 @@
     private async Task GetSelectedPokemon()
     {
         ListMessage = null;
-        if (selectedPokemon != null)
+        if (selectedSearch != null)
         {
-            await pokedex.GetPokemonInfos(selectedPokemon.Name);
+            await pokedex.GetPokemonInfos(selectedSearch.Name);
         }
     }
     #endregion
@@ -191,7 +191,7 @@
             var savings = JsonSerializer.Serialize(pokedex.Favorites);
             await JS.InvokeVoidAsync("localStorage.setItem", "pokemonfavs", savings);
             ListMessage = "Adedd";
-            selectedPokemon = null;
+            selectedSearch = null;
             pokedex.SelectedPokemon = null;
         }
         else
