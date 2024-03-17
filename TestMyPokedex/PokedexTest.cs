@@ -124,7 +124,7 @@ namespace TestMyPokedex
         }
 
         [Fact]
-        public async Task testRemoveFavs()
+        public async Task TestRemoveFavs()
         {
             //Arrange
             var pokedex = new Pokedex();
@@ -138,5 +138,21 @@ namespace TestMyPokedex
             //Assert
             Assert.Equal("ivysaur", myResult);
         }
+
+        [Fact]
+        public async Task TestGetLocalisation()
+        {
+            //Arrange
+            Pokedex pokedex = new Pokedex();
+            //Act
+            await pokedex.GetPokemonInfos("bulbasaur");
+            await pokedex.GetLocalisation(pokedex.SelectedPokemon);
+            int count = pokedex.Encounters.Count();
+            string firstLocalisation = pokedex.Encounters[0].LocationArea.Name;
+            //Assert
+            Assert.Equal(4, count);
+            Assert.Equal("cerulean-city-area", firstLocalisation);
+        }
+
     }
 }

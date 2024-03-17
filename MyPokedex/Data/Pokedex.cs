@@ -40,7 +40,7 @@ namespace MyPokedex.Data
             pokemon.Id = JsonSerializer.Deserialize<int>(id);
             GetSprites(pokemon);
             SelectedPokemon = pokemon;
-            GetType(root);
+            GetTypePokemon(root);
             GetHeightWeight(root);
             GetStats(root);
         }
@@ -64,7 +64,7 @@ namespace MyPokedex.Data
 
         //PRIVATE GET INFOS 
         #region Private functions to get more infos
-        private void GetType (JsonElement root)
+        private void GetTypePokemon (JsonElement root)
         {
             JsonElement type = root.GetProperty("types");
             JsonElement[] typeArray = type.EnumerateArray().Select(t => t.GetProperty("type").GetProperty("name")).ToArray();
