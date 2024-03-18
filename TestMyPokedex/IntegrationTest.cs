@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bunit;
+﻿using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
+using MudBlazor.Services;
 using MyPokedex.Data;
 using MyPokedex.Pages;
-using MudBlazor.Services;
-using Microsoft.JSInterop;
 
-namespace TestMyPokedex 
+namespace TestMyPokedex
 {
     public class IntegrationTest
     {
