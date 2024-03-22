@@ -21,6 +21,7 @@
             </div>
             @foreach(var detail in root.VersionDetails)
             {
+                
                 <MudText Class="cardText" Typo="Typo.h5">@detail.Version.Name :</MudText>
                 @foreach(var encounter in detail.EncounterDetails)
                 {
@@ -32,7 +33,8 @@
                     {
                         <MudText Class="cardText">Condition: @cond.Name</MudText>
                     }
-                }
+                    <br />
+                }            
             }
         </MudCard>
     }
